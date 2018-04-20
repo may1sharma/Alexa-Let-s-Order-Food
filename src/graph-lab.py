@@ -42,14 +42,14 @@ class Data():
         amazon = bottlenose.Amazon('AKIAITX2CCN72YWYELRQ', 'kLLl52gmWgKTNDdbir8EnY6ODwjLK5PlCqMs4yRI', 'ojharash-20')
         itemdict = []
         for item in prodList:
-            print ("Item No: ",item)
             try:
                 response = amazon.ItemLookup(ItemId=item, ResponseGroup=rgp)
-                print (response)
-                soup = BeautifulSoup(response,"html.parser")
-                value = soup.title.string
+                soup = BeautifulSoup(response,"xml")
+                if len(rgp) != 0:
+                    value = soup.LargeImage.URL.string
+                else:
+                    value = soup.ItemAttributes.Title.string
             except:
-                # print ("exception")
                 value = ""
                 pass
             itemdict.append(value)
@@ -74,12 +74,15 @@ d= Data()
 # d.loadMF()
 # findRecommendation(load_obj('item-model'),)
 #
-a = gl.SArray(['cat', 'dog', 'fossa'])
 reco = d.getRecommendation(['ABXLMWJIXXAIN'],10)
-# pn = d.queryAmazon(reco['ProductId'])
-# pn = [x.encode('UTF8') for x in pn]
-# sa = gl.SArray(pn)
-# reco.add_column(sa, name='ProductName')
+pn = d.queryAmazon(reco['ProductId'])
+pn = [x.encode('UTF8') for x in pn]
+reco.add_column(gl.SArray(pn), name='ProductName')
 rn = d.queryAmazon(reco['ProductId'],'Images')
-print (rn)
-print (reco)
+rn = [x.encode('UTF8') for x in rn]
+reco.add_column(gl.SArray(rn), name='ProductURL')
+
+reco = reco.pack_columns(columns=['score','rank','ProductName','ProductURL'], new_column_name='Details')
+df = reco.to_dataframe().set_index('ProductId')
+result = df.to_dict(orient='dict')['Details']
+print (result)
