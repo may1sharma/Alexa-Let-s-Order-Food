@@ -1,6 +1,9 @@
 import pandas as pd
 import graphlab as gl
 import pickle
+import numpy as np
+import bottlenose
+from bs4 import BeautifulSoup
 from time import sleep
 from collections import defaultdict
 # from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -35,6 +38,22 @@ class Data():
         results = model.recommend(users=user_id,k=topk)
         return results
 
+    def queryAmazon(self, prodList,rgp=''):
+        amazon = bottlenose.Amazon('AKIAITX2CCN72YWYELRQ', 'kLLl52gmWgKTNDdbir8EnY6ODwjLK5PlCqMs4yRI', 'ojharash-20')
+        itemdict = []
+        for item in prodList:
+            print ("Item No: ",item)
+            try:
+                response = amazon.ItemLookup(ItemId=item, ResponseGroup=rgp)
+                print (response)
+                soup = BeautifulSoup(response,"html.parser")
+                value = soup.title.string
+            except:
+                # print ("exception")
+                value = ""
+                pass
+            itemdict.append(value)
+        return itemdict
 
 # def save_obj(self,name ):
 #     with open('data/'+ name + '.pkl', 'wb') as f:
@@ -55,5 +74,12 @@ d= Data()
 # d.loadMF()
 # findRecommendation(load_obj('item-model'),)
 #
+a = gl.SArray(['cat', 'dog', 'fossa'])
 reco = d.getRecommendation(['ABXLMWJIXXAIN'],10)
+# pn = d.queryAmazon(reco['ProductId'])
+# pn = [x.encode('UTF8') for x in pn]
+# sa = gl.SArray(pn)
+# reco.add_column(sa, name='ProductName')
+rn = d.queryAmazon(reco['ProductId'],'Images')
+print (rn)
 print (reco)
