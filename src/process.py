@@ -29,8 +29,6 @@ class Data():
         # view.show()
 
     def createMF(self):
-        # mf = gl.recommender.factorization_recommender.create(self.training_data, user_id = 'UserId', item_id = 'ProductId',
-        #                                                      target = 'Score', verbose=True)
         mf = gl.recommender.factorization_recommender.create(self.items, user_id='UserId', item_id='ProductId',
                                                              target='Score', verbose=True)
         mf.save('factor-model')
@@ -84,38 +82,10 @@ def getRecoForUser(user, topk):
 def whatsTrending(topk):
     trends = Data().items.sort('Time', ascending=False)[:5000]
     model = gl.popularity_recommender.create(trends, user_id='UserId', item_id='ProductId', target='Score')
+    model.save('models/Trending')
     reco = model.recommend_from_interactions(trends[trends['Score'] > 4][:10].remove_column('UserId'), k=topk,
                                       items=trends[trends['Score'] > 3][100:1100].select_column('ProductId'))
     return getData(reco)
 
-# def save_obj(self,name ):
-#     with open('data/'+ name + '.pkl', 'wb') as f:
-#         pickle.dump(self.modelS, f)
-#
-# def load_obj(name):
-#     f = open('data/' + name + '.pkl', 'rb')
-#     return pickle.load(f)
-#
-# def findRecommendation(obj,validation_data):
-#     print recs[:4]
-#     view = obj.views.overview(validation_set=validation_data)
-#     view.show()
-
-
-# d= Data()
-# # d.createMF()
-# # d.loadMF()
-# # findRecommendation(load_obj('item-model'),)
-# #
-# reco = d.getRecommendation(['ABXLMWJIXXAIN'],10)
-# pn = d.queryAmazon(reco['ProductId'])
-# pn = [x.encode('UTF8') for x in pn]
-# reco.add_column(gl.SArray(pn), name='ProductName')
-# rn = d.queryAmazon(reco['ProductId'],'Images')
-# rn = [x.encode('UTF8') for x in rn]
-# reco.add_column(gl.SArray(rn), name='ProductURL')
-#
-# reco = reco.pack_columns(columns=['score','rank','ProductName','ProductURL'], new_column_name='Details')
-# df = reco.to_dataframe().set_index('ProductId')
-# result = df.to_dict(orient='dict')['Details']
-# print (result)
+# def getSimilarItems(item, topk):
+whatsTrending(25)
