@@ -1,42 +1,39 @@
-import pandas as pd
-import graphlab as gl
-import pickle
-import numpy as np
 import bottlenose
+import graphlab as gl
 from bs4 import BeautifulSoup
-from time import sleep
-from collections import defaultdict
-# from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-# from sklearn.model_selection import train_test_split
-# from sklearn.cluster import KMeans
-# from collections import defaultdict
-# from amazonproduct import API
+
+
 class Data():
     def __init__(self):
         self.items = gl.SFrame.read_csv('data/Reviews.csv')
-        # self.items.show()
-        # self.training_data, self.test_data = self.items.random_split(0.8, seed=0)
-        # model = gl.recommender.item_similarity_recommender.create(training_data, 'UserId', 'ProductId')
-        # model.save('item-model1')
-        # model = gl.load_model("item-model1")
-        # pred = model.predict(validation_data)
-        # results = model.evaluate(validation_data)
-        # print (results)
-        # view = model.views.overview(validation_set=test_data )
-        # view.show()
-        # gl.evaluation.rmse(self.validation_data, recs)
-        # view =  model.views.overview(validation_set=self.validation_data)
-        # view.show()
+        self.trends = self.items.sort('Time', ascending=False)[:5000]
 
-    def createMF(self):
-        mf = gl.recommender.factorization_recommender.create(self.items, user_id='UserId', item_id='ProductId',
-                                                             target='Score', verbose=True)
-        mf.save('factor-model')
+    def createModels(self):
+        mf = gl.factorization_recommender.create(self.items, user_id='UserId', item_id='ProductId', target='Score')
+        mf.save('models/MatrixFac')
 
-def getRecommendation(user_id, topk):
-    model = gl.load_model('factor-model')
-    results = model.recommend(users=user_id,k=topk)
-    return results
+        item_item = gl.item_similarity_recommender.create(self.items, user_id='UserId', item_id='ProductId', target='Score')
+        item_item.save('models/item-item_CF')
+
+        popular = gl.popularity_recommender.create(self.items, user_id='UserId', item_id='ProductId', target='Score')
+        popular.save('models/Popular')
+
+        trending = gl.popularity_recommender.create(self.trends, user_id='UserId', item_id='ProductId', target='Score')
+        trending.save('models/Trending')
+
+    def visualize(self):
+        # Start at your instinct
+        self.items.show()
+        training_data, test_data = self.items.random_split(0.8, seed=0)
+        model = gl.load_model("item-model1")
+        pred = model.predict(test_data)
+        results = model.evaluate(test_data)
+        print (results)
+        view = model.views.overview(validation_set=test_data)
+        view.show()
+        gl.evaluation.rmse(self.validation_data)
+        view = model.views.overview(validation_set=self.validation_data)
+        view.show()
 
 def queryAmazon(prodList,rgp=''):
     amazon = bottlenose.Amazon('AKIAITX2CCN72YWYELRQ', 'kLLl52gmWgKTNDdbir8EnY6ODwjLK5PlCqMs4yRI', 'ojharash-20')
@@ -68,24 +65,27 @@ def getData(reco):
     return recommendations
 
 def mostPopular(topk):
-    trends = Data().items
-    model = gl.popularity_recommender.create(trends, user_id='UserId', item_id='ProductId', target='Score')
-    reco = model.recommend_from_interactions(trends[trends['Score'] > 4].remove_column('UserId'), k=topk,
-                                             items=trends[trends['Score'] > 2].select_column('ProductId'))
+    items = Data().items
+    model = gl.load_model('models/Popular')
+    reco = model.recommend_from_interactions(items[items['Score'] > 4].remove_column('UserId'), k=topk,
+                                             items=items[items['Score'] > 2].select_column('ProductId'))
     return getData(reco)
 
 
 def getRecoForUser(user, topk):
-    reco = getRecommendation(user, topk)
+    model = gl.load_model('models/MatrixFac')
+    reco = model.recommend(users=user,k=topk)
     return getData(reco)
 
 def whatsTrending(topk):
-    trends = Data().items.sort('Time', ascending=False)[:5000]
-    model = gl.popularity_recommender.create(trends, user_id='UserId', item_id='ProductId', target='Score')
-    model.save('models/Trending')
+    trends = Data().trends
+    model = gl.load_model('models/Trending')
     reco = model.recommend_from_interactions(trends[trends['Score'] > 4][:10].remove_column('UserId'), k=topk,
                                       items=trends[trends['Score'] > 3][100:1100].select_column('ProductId'))
     return getData(reco)
 
-# def getSimilarItems(item, topk):
-whatsTrending(25)
+def getSimilarItems(item, topk):
+    model = gl.load_model('models/item-item_CF')
+    reco = model.get_similar_items(items=[item], k=topk)
+    reco = reco.remove_column('ProductId').rename({'similar': 'ProductId'})
+    return getData(reco)

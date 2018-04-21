@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from process import Data, queryAmazon, mostPopular, getRecoForUser
-import graphlab as gl
+import sys
 
 app = Flask(__name__)
 
@@ -18,6 +18,10 @@ def main():
     return render_template('recommendations.html', user=username, reco=reco)
 
 if __name__ == '__main__':
-    # Data().createMF()
-    app.debug = True
-    app.run()
+    if len(sys.argv)==2 and sys.argv[1] == 'create':
+        Data().createModels()
+    elif len(sys.argv)==2 and sys.argv[1] == 'debug':
+        app.debug = True
+        app.run()
+    else:
+        app.run()
