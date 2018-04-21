@@ -41,12 +41,7 @@
                 </div>
                 <!--  Login Register Area -->
                 <div class="col-4 col-sm-4">
-                    <div class="newsletter-form">
-                        <form action="/recommend" method="post">
-                            <input type="text" name="username" id="username" placeholder="Username">
-                            <button type="submit"><i class="fa fa-sign-in" aria-hidden="true"></i></button>
-                        </form>
-                    </div>
+                    <p>Welcome {{ user }}</p>
                 </div>
             </div>
         </div>
@@ -67,43 +62,7 @@
 
             <div class="row">
                 <div class="col-12">
-                    <h2>Trending</h2>
-                    <!--<nav class="navbar navbar-expand-lg">-->
-                        <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#yummyfood-nav" aria-controls="yummyfood-nav" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars" aria-hidden="true"></i> Menu</button>-->
-                        <!--&lt;!&ndash; Menu Area Start &ndash;&gt;-->
-                        <!--<div class="collapse navbar-collapse justify-content-center" id="yummyfood-nav">-->
-                            <!--<ul class="navbar-nav" id="yummy-nav">-->
-                                <!--<li class="nav-item active">-->
-                                    <!--<a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>-->
-                                <!--</li>-->
-                                <!--<li class="nav-item dropdown">-->
-                                    <!--<a class="nav-link dropdown-toggle" href="#" id="yummyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>-->
-                                    <!--<div class="dropdown-menu" aria-labelledby="yummyDropdown">-->
-                                        <!--<a class="dropdown-item" href="index.html">Home</a>-->
-                                        <!--<a class="dropdown-item" href="archive.html">Archive</a>-->
-                                        <!--<a class="dropdown-item" href="single.html">Single Blog</a>-->
-                                        <!--<a class="dropdown-item" href="static.html">Static Page</a>-->
-                                        <!--<a class="dropdown-item" href="contact.html">Contact</a>-->
-                                    <!--</div>-->
-                                <!--</li>-->
-                                <!--<li class="nav-item">-->
-                                    <!--<a class="nav-link" href="#">Features</a>-->
-                                <!--</li>-->
-                                <!--<li class="nav-item">-->
-                                    <!--<a class="nav-link" href="#">Categories</a>-->
-                                <!--</li>-->
-                                <!--<li class="nav-item">-->
-                                    <!--<a class="nav-link" href="archive.html">Archive</a>-->
-                                <!--</li>-->
-                                <!--<li class="nav-item">-->
-                                    <!--<a class="nav-link" href="#">About</a>-->
-                                <!--</li>-->
-                                <!--<li class="nav-item">-->
-                                    <!--<a class="nav-link" href="contact.html">Contact</a>-->
-                                <!--</li>-->
-                            <!--</ul>-->
-                        <!--</div>-->
-                    <!--</nav>-->
+                    <h2>What we think you'll <i class="fa fa-heart-o" aria-hidden="true"></i></h2>
                 </div>
             </div>
         </div>
@@ -113,85 +72,83 @@
     <!-- ****** Welcome Post Area Start ****** -->
     <section class="welcome-post-sliders owl-carousel">
 
+        {% for key, value in reco.items() %}
         <!-- Single Slide -->
         <div class="welcome-single-slide">
             <!-- Post Thumb -->
-            <img src="static/img/bg-img/slide-1.jpg" alt="">
+            <img src={{ value[3] }} alt="">
             <!-- Overlay Text -->
             <div class="project_title">
                 <div class="post-date-commnents d-flex">
-                    <a href="#">May 19, 2017</a>
-                    <a href="#">5 Comment</a>
+                    <a href="#">{{ value[0] }}</a>
                 </div>
-                <a href="#">
-                    <h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>
-                </a>
             </div>
         </div>
+        {% endfor %}
 
         <!-- Single Slide -->
-        <div class="welcome-single-slide">
-            <!-- Post Thumb -->
-            <img src="static/img/bg-img/slide-2.jpg" alt="">
-            <!-- Overlay Text -->
-            <div class="project_title">
-                <div class="post-date-commnents d-flex">
-                    <a href="#">May 19, 2017</a>
-                    <a href="#">5 Comment</a>
-                </div>
-                <a href="#">
-                    <h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>
-                </a>
-            </div>
-        </div>
+        <!--<div class="welcome-single-slide">-->
+            <!--&lt;!&ndash; Post Thumb &ndash;&gt;-->
+            <!--<img src="static/img/bg-img/slide-2.jpg" alt="">-->
+            <!--&lt;!&ndash; Overlay Text &ndash;&gt;-->
+            <!--<div class="project_title">-->
+                <!--<div class="post-date-commnents d-flex">-->
+                    <!--<a href="#">May 19, 2017</a>-->
+                    <!--<a href="#">5 Comment</a>-->
+                <!--</div>-->
+                <!--<a href="#">-->
+                    <!--<h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>-->
+                <!--</a>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <!-- Single Slide -->
-        <div class="welcome-single-slide">
-            <!-- Post Thumb -->
-            <img src="static/img/bg-img/slide-3.jpg" alt="">
-            <!-- Overlay Text -->
-            <div class="project_title">
-                <div class="post-date-commnents d-flex">
-                    <a href="#">May 19, 2017</a>
-                    <a href="#">5 Comment</a>
-                </div>
-                <a href="#">
-                    <h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>
-                </a>
-            </div>
-        </div>
+        <!--<div class="welcome-single-slide">-->
+            <!--&lt;!&ndash; Post Thumb &ndash;&gt;-->
+            <!--<img src="static/img/bg-img/slide-3.jpg" alt="">-->
+            <!--&lt;!&ndash; Overlay Text &ndash;&gt;-->
+            <!--<div class="project_title">-->
+                <!--<div class="post-date-commnents d-flex">-->
+                    <!--<a href="#">May 19, 2017</a>-->
+                    <!--<a href="#">5 Comment</a>-->
+                <!--</div>-->
+                <!--<a href="#">-->
+                    <!--<h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>-->
+                <!--</a>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <!-- Single Slide -->
-        <div class="welcome-single-slide">
-            <!-- Post Thumb -->
-            <img src="static/img/bg-img/slide-4.jpg" alt="">
-            <!-- Overlay Text -->
-            <div class="project_title">
-                <div class="post-date-commnents d-flex">
-                    <a href="#">May 19, 2017</a>
-                    <a href="#">5 Comment</a>
-                </div>
-                <a href="#">
-                    <h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>
-                </a>
-            </div>
-        </div>
+        <!--<div class="welcome-single-slide">-->
+            <!--&lt;!&ndash; Post Thumb &ndash;&gt;-->
+            <!--<img src="static/img/bg-img/slide-4.jpg" alt="">-->
+            <!--&lt;!&ndash; Overlay Text &ndash;&gt;-->
+            <!--<div class="project_title">-->
+                <!--<div class="post-date-commnents d-flex">-->
+                    <!--<a href="#">May 19, 2017</a>-->
+                    <!--<a href="#">5 Comment</a>-->
+                <!--</div>-->
+                <!--<a href="#">-->
+                    <!--<h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>-->
+                <!--</a>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <!-- Single Slide -->
-        <div class="welcome-single-slide">
-            <!-- Post Thumb -->
-            <img src="static/img/bg-img/slide-4.jpg" alt="">
-            <!-- Overlay Text -->
-            <div class="project_title">
-                <div class="post-date-commnents d-flex">
-                    <a href="#">May 19, 2017</a>
-                    <a href="#">5 Comment</a>
-                </div>
-                <a href="#">
-                    <h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>
-                </a>
-            </div>
-        </div>
+        <!--<div class="welcome-single-slide">-->
+            <!--&lt;!&ndash; Post Thumb &ndash;&gt;-->
+            <!--<img src="static/img/bg-img/slide-4.jpg" alt="">-->
+            <!--&lt;!&ndash; Overlay Text &ndash;&gt;-->
+            <!--<div class="project_title">-->
+                <!--<div class="post-date-commnents d-flex">-->
+                    <!--<a href="#">May 19, 2017</a>-->
+                    <!--<a href="#">5 Comment</a>-->
+                <!--</div>-->
+                <!--<a href="#">-->
+                    <!--<h5>“I’ve Come and I’m Gone”: A Tribute to Istanbul’s Street</h5>-->
+                <!--</a>-->
+            <!--</div>-->
+        <!--</div>-->
 
     </section>
     <!-- ****** Welcome Area End ****** -->

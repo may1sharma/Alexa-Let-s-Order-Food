@@ -13,7 +13,8 @@ from collections import defaultdict
 # from amazonproduct import API
 class Data():
     def __init__(self):
-        self.items = gl.SFrame.read_csv('data/Reviews.csv')
+        print ("Init")
+        # self.items = gl.SFrame.read_csv('data/Reviews.csv')
         # self.items.show()
         # self.training_data, self.test_data = self.items.random_split(0.8, seed=0)
         # model = gl.recommender.item_similarity_recommender.create(training_data, 'UserId', 'ProductId')
@@ -69,20 +70,20 @@ class Data():
 #     view.show()
 
 
-d= Data()
-# d.createMF()
-# d.loadMF()
-# findRecommendation(load_obj('item-model'),)
+# d= Data()
+# # d.createMF()
+# # d.loadMF()
+# # findRecommendation(load_obj('item-model'),)
+# #
+# reco = d.getRecommendation(['ABXLMWJIXXAIN'],10)
+# pn = d.queryAmazon(reco['ProductId'])
+# pn = [x.encode('UTF8') for x in pn]
+# reco.add_column(gl.SArray(pn), name='ProductName')
+# rn = d.queryAmazon(reco['ProductId'],'Images')
+# rn = [x.encode('UTF8') for x in rn]
+# reco.add_column(gl.SArray(rn), name='ProductURL')
 #
-reco = d.getRecommendation(['ABXLMWJIXXAIN'],10)
-pn = d.queryAmazon(reco['ProductId'])
-pn = [x.encode('UTF8') for x in pn]
-reco.add_column(gl.SArray(pn), name='ProductName')
-rn = d.queryAmazon(reco['ProductId'],'Images')
-rn = [x.encode('UTF8') for x in rn]
-reco.add_column(gl.SArray(rn), name='ProductURL')
-
-reco = reco.pack_columns(columns=['score','rank','ProductName','ProductURL'], new_column_name='Details')
-df = reco.to_dataframe().set_index('ProductId')
-result = df.to_dict(orient='dict')['Details']
-print (result)
+# reco = reco.pack_columns(columns=['score','rank','ProductName','ProductURL'], new_column_name='Details')
+# df = reco.to_dataframe().set_index('ProductId')
+# result = df.to_dict(orient='dict')['Details']
+# print (result)
