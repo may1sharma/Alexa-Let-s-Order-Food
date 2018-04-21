@@ -89,3 +89,10 @@ def getSimilarItems(item, topk):
     reco = model.get_similar_items(items=[item], k=topk)
     reco = reco.remove_column('ProductId').rename({'similar': 'ProductId'})
     return getData(reco)
+
+def helpfulReviews(item, topk):
+    items = Data().items
+    reviews = items[items['ProductId'] == item]
+    reviews['helpful'] = reviews['HelpfulnessNumerator']/reviews['HelpfulnessDenominator']
+    reviews = reviews.sort(['helpful', 'Time'], ascending=False)
+    return reviews[:topk]
