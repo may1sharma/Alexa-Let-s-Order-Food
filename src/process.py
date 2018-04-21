@@ -57,14 +57,7 @@ def queryAmazon(prodList,rgp=''):
         itemdict.append(value)
     return itemdict
 
-
-def mostPopular(topk):
-    model = gl.load_model('factor-model')
-    results = model.recommend(k=topk)
-    return results
-
-def getRecoForUser(user, topk):
-    reco = getRecommendation(user, topk)
+def getData(reco):
     pn = queryAmazon(reco['ProductId'])
     pn = [x.encode('UTF8') for x in pn]
     reco.add_column(gl.SArray(pn), name='ProductName')
@@ -75,6 +68,25 @@ def getRecoForUser(user, topk):
     df = reco.to_dataframe().set_index('ProductId')
     recommendations = df.to_dict(orient='dict')['Details']
     return recommendations
+
+def mostPopular(topk):
+    trends = Data().items
+    model = gl.popularity_recommender.create(trends, user_id='UserId', item_id='ProductId', target='Score')
+    reco = model.recommend_from_interactions(trends[trends['Score'] > 4].remove_column('UserId'), k=topk,
+                                             items=trends[trends['Score'] > 2].select_column('ProductId'))
+    return getData(reco)
+
+
+def getRecoForUser(user, topk):
+    reco = getRecommendation(user, topk)
+    return getData(reco)
+
+def whatsTrending(topk):
+    trends = Data().items.sort('Time', ascending=False)[:5000]
+    model = gl.popularity_recommender.create(trends, user_id='UserId', item_id='ProductId', target='Score')
+    reco = model.recommend_from_interactions(trends[trends['Score'] > 4][:10].remove_column('UserId'), k=topk,
+                                      items=trends[trends['Score'] > 3][100:1100].select_column('ProductId'))
+    return getData(reco)
 
 # def save_obj(self,name ):
 #     with open('data/'+ name + '.pkl', 'wb') as f:

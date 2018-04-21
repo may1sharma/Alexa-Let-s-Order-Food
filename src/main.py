@@ -6,8 +6,10 @@ app = Flask(__name__)
 
 @app.route("/", methods=['GET','POST'])
 def welcome():
-    popular = mostPopular(20)
-    return render_template('index.html', popular=popular)
+    # popular = mostPopular(20)
+    # return render_template('index.html', popular=popular)
+    return render_template('index.html')
+
 
 @app.route("/recommend", methods=['GET','POST'])
 def main():
@@ -16,4 +18,6 @@ def main():
     return render_template('recommendations.html', user=username, reco=reco)
 
 if __name__ == '__main__':
+    # Data().createMF()
+    app.debug = True
     app.run()
