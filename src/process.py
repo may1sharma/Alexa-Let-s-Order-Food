@@ -94,8 +94,9 @@ class Data():
         items = self.items
         return items[items['ProductId']==item].select_column('Score').mean()
 
-
-
-# print getSimilarItems('B006K2ZZ7K', 10)
-# print whatsTrending(25)
-# print getAverageRating('B0009XLVG0')
+    def helpfulReviews(self, item, topk):
+        items = self.items
+        reviews = items[items['ProductId'] == item]
+        reviews['helpful'] = reviews['HelpfulnessNumerator']/reviews['HelpfulnessDenominator']
+        reviews = reviews.sort(['helpful', 'Time'], ascending=False)
+        return reviews[:topk]
