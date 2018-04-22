@@ -43,7 +43,7 @@ class Data():
                 response = amazon.ItemLookup(ItemId=item, ResponseGroup=rgp)
                 soup = BeautifulSoup(response,"xml")
                 if len(rgp) != 0:
-                    value = soup.LargeImage.URL.string
+                    value = soup.MediumImage.URL.string
                 else:
                     value = soup.ItemAttributes.Title.string
             except:
@@ -100,3 +100,21 @@ class Data():
         reviews['helpful'] = reviews['HelpfulnessNumerator']/reviews['HelpfulnessDenominator']
         reviews = reviews.sort(['helpful', 'Time'], ascending=False)
         return reviews[:topk]
+
+    def userHistory(self, user, topk):
+        items = self.items
+        reco = items[items['UserId'] == user].sort(['Time'], ascending=False)[:topk]
+        pn = self.queryAmazon(reco['ProductId'])
+        pn = [x.encode('UTF8') for x in pn]
+        reco.add_column(gl.SArray(pn), name='ProductName')
+        rn = self.queryAmazon(reco['ProductId'], 'Images')
+        rn = [x.encode('UTF8') for x in rn]
+        reco.add_column(gl.SArray(rn), name='ProductURL')
+        reco = reco.pack_columns(columns=['Score', 'ProductName', 'ProductURL', 'Summary', 'Text'], new_column_name='Details')
+        df = reco.to_dataframe().set_index('ProductId')
+        user_history = df.to_dict(orient='dict')['Details']
+        return user_history
+
+    def getUserName(self, user):
+        items = self.items
+        return items[items['UserId'] == user].select_column('ProfileName')[0]
