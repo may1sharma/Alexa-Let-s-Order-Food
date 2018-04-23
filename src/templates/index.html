@@ -45,7 +45,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-2 col-sm-2"></div>
+                <div class="col-4 col-sm-4"></div>
 
                 <!--  Login Register Area -->
                 <div class="col-4 col-sm-4">
@@ -93,9 +93,35 @@
             <!-- Overlay Text -->
             <div class="project_title">
                 <div class="post-date-commnents d-flex">
-                    {{value[0]}}
+                    {{key}} &nbsp;&nbsp;&nbsp;
+                <span id="stars{{key}}"></span><br>
+                <script>
+                    document.getElementById("stars{{key}}").innerHTML = getStars({{ value[0] }});
+
+                    function getStars(rating) {
+
+                      // Round to nearest half
+                      rating = Math.round(rating * 2) / 2;
+                      let output = [];
+
+                      // Append all the filled whole stars
+                      for (var i = rating; i >= 1; i--)
+                        output.push('<i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                      // If there is a half a star, append it
+                      if (i == .5) output.push('<i class="fa fa-star-half-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                      // Fill the empty stars
+                      for (let i = (5 - rating); i >= 1; i--)
+                        output.push('<i class="fa fa-star-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                      return output.join('');
+
+                    }
+
+                </script>
                 </div>
-                <a href="{{ url_for('item', item=key) }}" style="text-decorations:none; color:inherit;">
+                <a href="{{ url_for('item', item=key) }}">
                     <h7>{{value[2]}}</h7>
                 </a>
             </div>
