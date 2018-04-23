@@ -19,7 +19,8 @@ def user():
     if username == 'query': username = request.form['username']
     username = data.getUserName(username)
     reco = data.getRecoForUser([username], 10)
-    return render_template('recommendations.html', user=username, reco=reco)
+    history = data.userHistory(username, 10)
+    return render_template('recommendations.html', user=username, reco=reco, hist = history)
 
 @app.route("/item", methods=['GET','POST'])
 def item():

@@ -90,6 +90,30 @@
         {% endfor %}
 
     </section>
+
+    <section class="welcome-post-sliders owl-carousel">
+
+        {% for key, value in hist.items() %}
+        <!-- Single Slide -->
+        <div class="welcome-single-slide">
+            <!-- Post Thumb -->
+            <img src={{ value[1] }} alt="" width="150" height="280">
+            <!-- Overlay Text -->
+            <div class="project_title">
+                <div class="post-date-commnents d-flex">
+                    <a href="{{ url_for('item', item=key) }}">{{ value[0] }}</a>
+                </div>
+                <a href="{{ url_for('item', item=key) }}">
+                    <h7>{{ value[3] }}</h7>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </section>
+
+     <!-- ****** trying some shit ****** -->
+
     <!-- ****** Welcome Area End ****** -->
 
     <!-- ****** Categories Area Start ****** -->
