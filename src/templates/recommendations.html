@@ -31,6 +31,7 @@
     <!-- ****** Top Header Area Start ****** -->
     <div class="top_header_area">
         <div class="container">
+            <br>
             <div class="row">
                 <div class="col-8 col-sm-8">
                 </div>
@@ -57,7 +58,7 @@
 
             <div class="row">
                 <div class="col-12">
-                    <h2>What we think you'll <i class="fa fa-heart-o" aria-hidden="true"></i></h2>
+                    <h2>What we think you'll <i class="fa fa-heart" aria-hidden="true" style="color:red;"></i></h2>
                 </div>
             </div>
         </div>
@@ -65,26 +66,52 @@
     <!-- ****** Header Area End ****** -->
 <br><br>
     <!-- ****** Contents Area Start ****** -->
-        <section class="welcome-post-sliders owl-carousel">
+    <section class="welcome-post-sliders owl-carousel">
 
-            {% for key, value in reco.items() %}
-            <!-- Single Slide -->
-            <div class="welcome-single-slide">
-                <!-- Post Thumb -->
-                <img src={{ value[3] }} alt="" width="150" height="280">
-                <!-- Overlay Text -->
-                <div class="project_title">
-                    <div class="post-date-commnents d-flex">
-                        <a href="{{ url_for('item', item=key) }}">{{ value[0] }}</a>
-                    </div>
-                    <a href="{{ url_for('item', item=key) }}">
-                        <h7>{{ value[2] }}</h7>
-                    </a>
+        {% for key, value in reco.items() %}
+        <!-- Single Slide -->
+        <div class="welcome-single-slide">
+            <!-- Post Thumb -->
+            <img src={{ value[3] }} alt="" width="150" height="280">
+            <!-- Overlay Text -->
+            <div class="project_title">
+                <div class="post-date-commnents d-flex">
+                    {{key}} &nbsp;&nbsp;&nbsp;
+                <span id="stars{{key}}"></span><br>
+                <script>
+                    document.getElementById("stars{{key}}").innerHTML = getStars({{ value[0] }});
+
+                    function getStars(rating) {
+
+                      // Round to nearest half
+                      rating = Math.round(rating * 2) / 2;
+                      let output = [];
+
+                      // Append all the filled whole stars
+                      for (var i = rating; i >= 1; i--)
+                        output.push('<i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                      // If there is a half a star, append it
+                      if (i == .5) output.push('<i class="fa fa-star-half-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                      // Fill the empty stars
+                      for (let i = (5 - rating); i >= 1; i--)
+                        output.push('<i class="fa fa-star-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                      return output.join('');
+
+                    }
+
+                </script>
                 </div>
+                <a href="{{ url_for('item', item=key) }}">
+                    <h7>{{ value[2] }}</h7>
+                </a>
             </div>
-            {% endfor %}
+        </div>
+        {% endfor %}
 
-        </section>
+    </section>
 
     <br><br><br><br>
 
@@ -109,8 +136,34 @@
                 <!-- Overlay Text -->
                 <div class="project_title">
                     <div class="post-date-commnents d-flex">
-                        <a href="{{ url_for('item', item=key) }}">{{ value[0] }}</a>
-                    </div>
+                    {{key}} &nbsp;&nbsp;&nbsp;
+                    <span id="stars{{key}}1"></span><br>
+                    <script>
+                        document.getElementById("stars{{key}}1").innerHTML = getStars({{ value[0] }});
+
+                        function getStars(rating) {
+
+                          // Round to nearest half
+                          rating = Math.round(rating * 2) / 2;
+                          let output = [];
+
+                          // Append all the filled whole stars
+                          for (var i = rating; i >= 1; i--)
+                            output.push('<i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                          // If there is a half a star, append it
+                          if (i == .5) output.push('<i class="fa fa-star-half-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                          // Fill the empty stars
+                          for (let i = (5 - rating); i >= 1; i--)
+                            output.push('<i class="fa fa-star-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+                          return output.join('');
+
+                        }
+
+                    </script>
+                </div>
                     <a href="{{ url_for('item', item=key) }}">
                         <h7>{{ value[1] }}</h7>
                     </a>
