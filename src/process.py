@@ -108,10 +108,10 @@ class Data():
         items = self.items
         reco = items[items['UserId'] == user].sort(['Time'], ascending=False)[:topk]
         pn = self.queryAmazon(reco['ProductId'])
-        pn = [x.encode('UTF8') for x in pn]
+        pn = [x.encode('UTF8') if len(x) != 0 else "Some Awesome Product" for x in pn]
         reco.add_column(gl.SArray(pn), name='ProductName')
         rn = self.queryAmazon(reco['ProductId'], 'Images')
-        rn = [x.encode('UTF8') for x in rn]
+        rn = [x.encode('UTF8') if len(x) != 0 else "static/img/default.jpeg" for x in rn]
         reco.add_column(gl.SArray(rn), name='ProductURL')
         reco = reco.pack_columns(columns=['Score', 'ProductName', 'ProductURL', 'Summary', 'Text'], new_column_name='Details')
         df = reco.to_dataframe().set_index('ProductId')
@@ -127,7 +127,3 @@ class Data():
         items = items.set_index('0')
         items = items.to_dict(orient='dict')['1']
         return items
-
-
-
-# Data().whatsTrending(10)

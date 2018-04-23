@@ -16,10 +16,10 @@ def welcome():
 def user():
     username = request.args.get('user')
     if username == 'query': username = request.form['username']
-    username = data.getUserName(username)
+    profilename = data.getUserName(username)
     reco = data.getRecoForUser([username], 10)
     history = data.userHistory(username, 10)
-    return render_template('recommendations.html', user=username, reco=reco, hist = history)
+    return render_template('recommendations.html', user=profilename, reco=reco, hist=history)
 
 @app.route("/item", methods=['GET','POST'])
 def item():
