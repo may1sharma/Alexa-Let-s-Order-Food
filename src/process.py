@@ -1,6 +1,7 @@
 import bottlenose
 import graphlab as gl
 from bs4 import BeautifulSoup
+import pandas as pd
 
 
 class Data():
@@ -57,7 +58,7 @@ class Data():
         pn = [x.encode('UTF8') if len(x) != 0 else "Some Awesome Product" for x in pn ]
         reco.add_column(gl.SArray(pn), name='ProductName')
         rn = self.queryAmazon(reco['ProductId'], 'Images')
-        rn = [x.encode('UTF8') if len(x) != 0 else "static/img/core-img/favicon.ico" for x in rn]
+        rn = [x.encode('UTF8') if len(x) != 0 else "static/img/default.jpeg" for x in rn]
         reco.add_column(gl.SArray(rn), name='ProductURL')
         reco = reco.pack_columns(columns=['score', 'rank', 'ProductName', 'ProductURL'], new_column_name='Details')
         df = reco.to_dataframe().set_index('ProductId')
@@ -121,13 +122,12 @@ class Data():
         items = self.items
         return items[items['UserId'] == user].select_column('ProfileName')[0]
 
-    def getAllIDs(self):
-        users = self.items.select_column('UserId').unique()
-        products = self.items.select_column('ProductId').unique()
-        # print {"users": list(users), "products": list(products)}
-        return {"users": list(users)[:60], "products": list(products)[:60]}
+    def getAllItems(self):
+        items = pd.read_csv('data/names.csv', encoding='utf-8')
+        items = items.set_index('0')
+        items = items.to_dict(orient='dict')['1']
+        return items
 
 
 
 # Data().whatsTrending(10)
-Data().helpfulReviews('B0009XLVG0', 5)

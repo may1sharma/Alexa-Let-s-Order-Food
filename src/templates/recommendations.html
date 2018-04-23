@@ -55,7 +55,7 @@
                 <!-- Logo Area Start -->
                 <div class="col-12">
                     <div class="logo_area text-center">
-                        <a href="index.html" class="yummy-logo">Alexa! Let's order food...</a>
+                        <a href="/" class="yummy-logo">Alexa! Let's order food...</a>
                     </div>
                 </div>
             </div>
@@ -80,9 +80,9 @@
             <!-- Overlay Text -->
             <div class="project_title">
                 <div class="post-date-commnents d-flex">
-                    <a href="{{ url_for('item', item=key) }}">{{ value[0] }}</a>
+                    <a href="{{ url_for('item', item=key) }}" style="text-decorations:none; color:inherit;">{{ value[0] }}</a>
                 </div>
-                <a href="{{ url_for('item', item=key) }}">
+                <a href="{{ url_for('item', item=key) }}" style="text-decorations:none; color:inherit;">
                     <h7>{{ value[2] }}</h7>
                 </a>
             </div>
@@ -101,9 +101,9 @@
             <!-- Overlay Text -->
             <div class="project_title">
                 <div class="post-date-commnents d-flex">
-                    <a href="{{ url_for('item', item=key) }}">{{ value[0] }}</a>
+                    <a href="{{ url_for('item', item=key) }}" style="text-decorations:none; color:inherit;">{{ value[0] }}</a>
                 </div>
-                <a href="{{ url_for('item', item=key) }}">
+                <a href="{{ url_for('item', item=key) }}" style="text-decorations:none; color:inherit;">
                     <h7>{{ value[3] }}</h7>
                 </a>
             </div>

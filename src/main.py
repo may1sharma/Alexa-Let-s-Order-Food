@@ -8,9 +8,8 @@ data = Data()
 @app.route("/", methods=['GET','POST'])
 def welcome():
     popular = data.whatsTrending(20)
-    ids = data.getAllIDs()
+    ids = data.getAllItems()
     return render_template('index.html', popular=popular, data=ids)
-    # return render_template('index.html')
 
 
 @app.route("/recommend", methods=['GET','POST'])
