@@ -98,8 +98,10 @@ class Data():
         items = self.items
         reviews = items[items['ProductId'] == item]
         reviews['helpful'] = reviews['HelpfulnessNumerator']/reviews['HelpfulnessDenominator']
-        reviews = reviews.sort(['helpful', 'Time'], ascending=False)
-        return reviews[:topk]
+        reviews = reviews.sort(['helpful', 'Time'], ascending=False)[:topk]
+        reviews = reviews.to_dataframe().set_index('UserId')
+        reviews = reviews.to_dict(orient='dict')
+        return reviews
 
     def userHistory(self, user, topk):
         items = self.items
@@ -128,3 +130,4 @@ class Data():
 
 
 # Data().whatsTrending(10)
+Data().helpfulReviews('B0009XLVG0', 5)
