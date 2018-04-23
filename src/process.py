@@ -54,10 +54,10 @@ class Data():
 
     def getData(self,reco):
         pn = self.queryAmazon(reco['ProductId'])
-        pn = [x.encode('UTF8') for x in pn]
+        pn = [x.encode('UTF8') if len(x) != 0 else "Some Awesome Product" for x in pn ]
         reco.add_column(gl.SArray(pn), name='ProductName')
         rn = self.queryAmazon(reco['ProductId'], 'Images')
-        rn = [x.encode('UTF8') for x in rn]
+        rn = [x.encode('UTF8') if len(x) != 0 else "static/img/core-img/favicon.ico" for x in rn]
         reco.add_column(gl.SArray(rn), name='ProductURL')
         reco = reco.pack_columns(columns=['score', 'rank', 'ProductName', 'ProductURL'], new_column_name='Details')
         df = reco.to_dataframe().set_index('ProductId')
@@ -118,3 +118,13 @@ class Data():
     def getUserName(self, user):
         items = self.items
         return items[items['UserId'] == user].select_column('ProfileName')[0]
+
+    def getAllIDs(self):
+        users = self.items.select_column('UserId').unique()
+        products = self.items.select_column('ProductId').unique()
+        # print {"users": list(users), "products": list(products)}
+        return {"users": list(users)[:60], "products": list(products)[:60]}
+
+
+
+# Data().whatsTrending(10)

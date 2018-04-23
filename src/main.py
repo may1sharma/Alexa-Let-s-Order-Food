@@ -8,19 +8,23 @@ data = Data()
 @app.route("/", methods=['GET','POST'])
 def welcome():
     popular = data.whatsTrending(20)
-    return render_template('index.html', popular=popular)
+    ids = data.getAllIDs()
+    return render_template('index.html', popular=popular, data=ids)
     # return render_template('index.html')
 
 
 @app.route("/recommend", methods=['GET','POST'])
-def main():
-    username = request.form['username']
+def user():
+    username = request.args.get('user')
+    if username == 'query': username = request.form['username']
     username = data.getUserName(username)
     reco = data.getRecoForUser([username], 10)
     return render_template('recommendations.html', user=username, reco=reco)
 
-@app.route("/item_<item>", methods=['GET','POST'])
-def item(item):
+@app.route("/item", methods=['GET','POST'])
+def item():
+    item = request.args.get('item')
+    if item == 'query': item = request.form['item']
     name = data.queryAmazon([item])[0].encode('UTF8')
     img_url = data.queryAmazon([item], 'Images')[0].encode('UTF8')
     rating = data.getAverageRating(item)
