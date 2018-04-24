@@ -60,9 +60,9 @@ class Data():
                     response = amazon.ItemLookup(ItemId=item, ResponseGroup=rgp)
                     soup = BeautifulSoup(response,"xml")
                     if len(rgp) != 0:
-                        value = soup.MediumImage.URL.string.encode('utf-8')
+                        value = soup.MediumImage.URL.string
                     else:
-                        value = soup.ItemAttributes.Title.string.encode('utf-8')
+                        value = soup.ItemAttributes.Title.string
                 except:
                     value = ""
                     pass
@@ -71,10 +71,10 @@ class Data():
 
     def getData(self,reco):
         pn = self.queryAmazon(reco['ProductId'])
-        pn = [x.encode('UTF8') if len(x) != 0 else "Some Awesome Product" for x in pn]
+        pn = [x.encode('utf-8') if len(x) != 0 else "Some Awesome Product" for x in pn]
         reco.add_column(gl.SArray(pn), name='ProductName')
         rn = self.queryAmazon(reco['ProductId'], 'Images')
-        rn = [x.encode('UTF8') if len(x) != 0 else "static/img/default.jpeg" for x in rn]
+        rn = [x.encode('utf-8') if len(x) != 0 else "static/img/default.jpeg" for x in rn]
         reco.add_column(gl.SArray(rn), name='ProductURL')
         reco = reco.pack_columns(columns=['score', 'rank', 'ProductName', 'ProductURL'], new_column_name='Details')
         df = reco.to_dataframe().set_index('ProductId')
@@ -124,10 +124,10 @@ class Data():
         items = self.items
         reco = items[items['UserId'] == user].sort(['Time'], ascending=False)[:topk]
         pn = self.queryAmazon(reco['ProductId'])
-        pn = [x.encode('UTF8') if len(x) != 0 else "Some Awesome Product" for x in pn]
+        pn = [x.encode('utf-8') if len(x) != 0 else "Some Awesome Product" for x in pn]
         reco.add_column(gl.SArray(pn), name='ProductName')
         rn = self.queryAmazon(reco['ProductId'], 'Images')
-        rn = [x.encode('UTF8') if len(x) != 0 else "static/img/default.jpeg" for x in rn]
+        rn = [x.encode('utf-8') if len(x) != 0 else "static/img/default.jpeg" for x in rn]
         reco.add_column(gl.SArray(rn), name='ProductURL')
         reco = reco.pack_columns(columns=['Score', 'ProductName', 'ProductURL', 'Summary', 'Text'], new_column_name='Details')
         df = reco.to_dataframe().set_index('ProductId')
