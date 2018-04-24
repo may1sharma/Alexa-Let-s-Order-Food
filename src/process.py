@@ -8,6 +8,7 @@ class Data():
     def __init__(self):
         self.items = gl.SFrame.read_csv('data/Reviews.csv')
         self.trends = self.items.sort('Time', ascending=False)
+        self.db = pd.read_csv('data/db60_75.csv')
 
     def createModels(self):
         mf = gl.factorization_recommender.create(self.items, user_id='UserId', item_id='ProductId', target='Score')
@@ -21,6 +22,13 @@ class Data():
 
         trending = gl.popularity_recommender.create(self.trends[:5000], user_id='UserId', item_id='ProductId', target='Score')
         trending.save('models/Trending')
+
+    def evaluate(self):
+        # train, test = gl.recommender.util.random_split_by_user(self.items, user_id='UserId', item_id='ProductId')
+        # m = gl.item_similarity_recommender.create(train, user_id='UserId', item_id='ProductId', target='Score')
+        # m.evaluate_rmse(test, target='Score')
+        model = gl.load_model('models/Popular')
+        model.evaluate(self.items)
 
     def visualize(self):
         # Start at your instinct
@@ -39,23 +47,31 @@ class Data():
     def queryAmazon(self, prodList,rgp=''):
         amazon = bottlenose.Amazon('AKIAITX2CCN72YWYELRQ', 'kLLl52gmWgKTNDdbir8EnY6ODwjLK5PlCqMs4yRI', 'ojharash-20')
         itemdict = []
+        db = self.db
+        lis = list(db['Item'])
         for item in prodList:
-            try:
-                response = amazon.ItemLookup(ItemId=item, ResponseGroup=rgp)
-                soup = BeautifulSoup(response,"xml")
+            if item in lis:
                 if len(rgp) != 0:
-                    value = soup.MediumImage.URL.string
+                    value = db[db['Item'] == item]['Image'].values[0]
                 else:
-                    value = soup.ItemAttributes.Title.string
-            except:
-                value = ""
-                pass
+                    value = db[db['Item'] == item]['ProductName'].values[0]
+            else:
+                try:
+                    response = amazon.ItemLookup(ItemId=item, ResponseGroup=rgp)
+                    soup = BeautifulSoup(response,"xml")
+                    if len(rgp) != 0:
+                        value = soup.MediumImage.URL.string.encode('utf-8')
+                    else:
+                        value = soup.ItemAttributes.Title.string.encode('utf-8')
+                except:
+                    value = ""
+                    pass
             itemdict.append(value)
         return itemdict
 
     def getData(self,reco):
         pn = self.queryAmazon(reco['ProductId'])
-        pn = [x.encode('UTF8') if len(x) != 0 else "Some Awesome Product" for x in pn ]
+        pn = [x.encode('UTF8') if len(x) != 0 else "Some Awesome Product" for x in pn]
         reco.add_column(gl.SArray(pn), name='ProductName')
         rn = self.queryAmazon(reco['ProductId'], 'Images')
         rn = [x.encode('UTF8') if len(x) != 0 else "static/img/default.jpeg" for x in rn]
