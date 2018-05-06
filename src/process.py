@@ -45,7 +45,7 @@ class Data():
         view.show()
 
     def queryAmazon(self, prodList,rgp=''):
-        amazon = bottlenose.Amazon('AKIAITX2CCN72YWYELRQ', 'kLLl52gmWgKTNDdbir8EnY6ODwjLK5PlCqMs4yRI', 'ojharash-20')
+        amazon = bottlenose.Amazon('', '', '')
         itemdict = []
         db = self.db
         lis = list(db['Item'])
